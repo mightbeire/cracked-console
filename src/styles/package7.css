@@ -1,0 +1,19 @@
+.boot-state {
+  min-height: 100vh;
+  display: grid;
+  align-content: center;
+  gap: var(--space-3);
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+.boot-state h1,
+.boot-state p {
+  margin: 0;
+}
+
+.boot-state > p:not(.eyebrow) {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}

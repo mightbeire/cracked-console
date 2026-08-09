@@ -1,0 +1,67 @@
+.curriculum-week-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+  gap: var(--space-3);
+}
+.week-card,
+.day-card,
+.search-result-row,
+.resource-row {
+  text-align: left;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+.week-card,
+.day-card {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+.week-card p,
+.day-card small,
+.search-result-row p,
+.search-result-row small,
+.resource-row span {
+  color: var(--text-muted);
+}
+.week-day-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+  gap: var(--space-3);
+}
+.curriculum-search-panel {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+.curriculum-search-results {
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--border-subtle);
+  background: var(--border-subtle);
+}
+.search-result-row {
+  display: grid;
+  gap: 5px;
+  padding: var(--space-3);
+  border: 0;
+}
+.resource-index {
+  margin-top: var(--space-6);
+}
+.resource-row {
+  width: 100%;
+  display: grid;
+  gap: 4px;
+  padding: var(--space-3);
+  border-bottom: 0;
+}
+.resource-row:last-child {
+  border-bottom: 1px solid var(--border-subtle);
+}
+.error-copy {
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  padding: var(--space-3);
+}

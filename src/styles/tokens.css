@@ -1,0 +1,31 @@
+:root {
+  color-scheme: dark;
+
+  --bg-app: #191919;
+  --bg-surface: #202020;
+  --bg-raised: #252525;
+  --bg-hover: #2a2a2a;
+
+  --text-primary: #f1f1ef;
+  --text-secondary: #a7a7a3;
+  --text-muted: #777773;
+  --text-disabled: #565653;
+
+  --border-subtle: #30302e;
+  --border-strong: #4a4a47;
+  --focus: #f1f1ef;
+
+  --progress-track: #30302e;
+  --progress-fill: #e7e7e3;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+}

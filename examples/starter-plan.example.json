@@ -1,0 +1,521 @@
+{
+  "schemaVersion": 1,
+  "plan": {
+    "version": "1.0",
+    "title": "Two-Week Learning Starter",
+    "startDate": "2030-01-07",
+    "weeks": [
+      {
+        "title": "Week 1: Foundations",
+        "phase": 1,
+        "consolidation": false,
+        "days": [
+          {
+            "date": "2030-01-07",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Writing Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small writing objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-08",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Data Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small data objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-09",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Scripting Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small scripting objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-10",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Explanation Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small explanation objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-11",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Integration Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small integration objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-12",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "BUILD",
+                "label": "Build",
+                "plannedMinutes": 90,
+                "instructions": "Build or improve one small artifact that uses this week's material.",
+                "required": true
+              },
+              {
+                "type": "REVIEW",
+                "label": "Review",
+                "plannedMinutes": 20,
+                "instructions": "Review the result. Record one weakness and one next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "The artifact runs or the failure is recorded.",
+              "One next action is written."
+            ]
+          },
+          {
+            "date": "2030-01-13",
+            "rest": true,
+            "blocks": [],
+            "definitionOfDone": []
+          }
+        ]
+      },
+      {
+        "title": "Week 2: Integration",
+        "phase": 1,
+        "consolidation": true,
+        "days": [
+          {
+            "date": "2030-01-14",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Writing Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small writing objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-15",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Data Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small data objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-16",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Scripting Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small scripting objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-17",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Explanation Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small explanation objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-18",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Integration Focus",
+                "plannedMinutes": 60,
+                "instructions": "Study and practice one small integration objective. Produce a visible result.",
+                "required": true
+              },
+              {
+                "type": "RECALL",
+                "label": "Recall",
+                "plannedMinutes": 15,
+                "instructions": "Close the source. Explain the main idea from memory.",
+                "required": true
+              },
+              {
+                "type": "LOG",
+                "label": "Learning Log",
+                "plannedMinutes": 10,
+                "instructions": "Record what you learned, what you did, what remains unclear, and your next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "A visible work result exists.",
+              "The recall explanation is complete.",
+              "The learning log is complete."
+            ]
+          },
+          {
+            "date": "2030-01-19",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "BUILD",
+                "label": "Build",
+                "plannedMinutes": 90,
+                "instructions": "Build or improve one small artifact that uses this week's material.",
+                "required": true
+              },
+              {
+                "type": "REVIEW",
+                "label": "Review",
+                "plannedMinutes": 20,
+                "instructions": "Review the result. Record one weakness and one next action.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": [
+              "The artifact runs or the failure is recorded.",
+              "One next action is written."
+            ]
+          },
+          {
+            "date": "2030-01-20",
+            "rest": true,
+            "blocks": [],
+            "definitionOfDone": []
+          }
+        ]
+      }
+    ]
+  },
+  "skills": [
+    {
+      "code": "WRITE",
+      "name": "Clear Writing",
+      "family": "Communication"
+    },
+    {
+      "code": "DATA",
+      "name": "Data Basics",
+      "family": "Quantitative"
+    },
+    {
+      "code": "SCRIPT",
+      "name": "Basic Scripting",
+      "family": "Technical"
+    }
+  ],
+  "projects": [
+    {
+      "code": "P1",
+      "name": "Build a Local Notes Tool",
+      "coreIntegration": "Combine basic scripting, file handling, and clear documentation.",
+      "startDay": 8,
+      "endDay": 12,
+      "defenceAssessmentType": "PROJECT_DEFENCE",
+      "milestones": [
+        {
+          "title": "Define the behavior",
+          "description": "Write the commands and expected results."
+        },
+        {
+          "title": "Build the tool",
+          "description": "Create a small local command-line notes tool."
+        },
+        {
+          "title": "Test the tool",
+          "description": "Run normal and invalid input cases."
+        },
+        {
+          "title": "Explain the result",
+          "description": "Write a short explanation of the design and tradeoffs."
+        }
+      ]
+    }
+  ],
+  "reading": {
+    "months": [
+      {
+        "title": "Observation and Explanation",
+        "startDate": "2030-01-01",
+        "endDate": "2030-01-31",
+        "requiredCount": 1
+      }
+    ],
+    "books": [
+      {
+        "month": 1,
+        "slot": 1,
+        "title": "The Time Machine",
+        "author": "H. G. Wells",
+        "shortRead": false,
+        "bonus": false,
+        "reread": false,
+        "assignment": "Recall the main events from memory. Explain one idea about society that the story tests. Cite two passages by page or chapter. State one point that you reject or question. Connect the book to one modern system."
+      }
+    ]
+  },
+  "practice": {
+    "title": "Sketching Basics",
+    "stages": [
+      {
+        "title": "Observe",
+        "goal": "Draw simple objects from observation.",
+        "lessons": [
+          {
+            "title": "Contour and Proportion",
+            "concept": "Observe the outer shape before you add detail.",
+            "practiceAssignment": "Draw three household objects. Use five minutes for each drawing.",
+            "reviewPrompts": "Which proportion was least accurate? What did you notice only after you drew it?",
+            "resources": []
+          }
+        ]
+      },
+      {
+        "title": "Form",
+        "goal": "Use simple forms to represent volume.",
+        "unlockAfterStage": 1,
+        "lessons": [
+          {
+            "title": "Boxes, Cylinders, and Spheres",
+            "concept": "Break a complex object into simple three-dimensional forms.",
+            "practiceAssignment": "Choose two objects. Draw each object first as simple forms and then with basic detail.",
+            "reviewPrompts": "Which simple form helped most? Where did the final drawing depart from the form study?",
+            "resources": []
+          }
+        ]
+      }
+    ],
+    "categories": [
+      "Objects",
+      "Rooms",
+      "Plants",
+      "People"
+    ],
+    "challenges": [
+      {
+        "minimumStage": 1,
+        "title": "Five-Minute Object",
+        "prompt": "Choose one safe object near you. Draw it for five minutes. Then write two observations that you missed before you started."
+      },
+      {
+        "minimumStage": 2,
+        "title": "Form Breakdown",
+        "prompt": "Choose one everyday object. Represent it with no more than four simple forms before you add detail."
+      }
+    ]
+  }
+}

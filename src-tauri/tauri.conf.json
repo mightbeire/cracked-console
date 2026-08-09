@@ -1,0 +1,46 @@
+{
+    "$schema":  "https://schema.tauri.app/config/2",
+    "productName":  "Cracked Console",
+    "version":  "1.0.0",
+    "identifier":  "com.crackedconsole.community",
+    "build":  {
+                  "beforeDevCommand":  "npm run dev",
+                  "devUrl":  "http://127.0.0.1:1420",
+                  "beforeBuildCommand":  "npm run build",
+                  "frontendDist":  "../dist"
+              },
+    "app":  {
+                "windows":  [
+                                {
+                                    "label":  "main",
+                                    "title":  "Cracked Console",
+                                    "width":  1180,
+                                    "height":  780,
+                                    "minWidth":  760,
+                                    "minHeight":  560,
+                                    "resizable":  true,
+                                    "fullscreen":  false,
+                                    "center":  true,
+                                    "theme":  "Dark"
+                                }
+                            ],
+                "security":  {
+                                 "csp":  {
+                                             "default-src":  "\u0027self\u0027",
+                                             "connect-src":  "ipc: http://ipc.localhost",
+                                             "img-src":  "\u0027self\u0027 asset: http://asset.localhost data: blob:",
+                                             "style-src":  "\u0027self\u0027 \u0027unsafe-inline\u0027"
+                                         }
+                             }
+            },
+    "plugins":  {
+                    "sql":  {
+                                "preload":  [
+                                                "sqlite:cracked-console.db"
+                                            ]
+                            }
+                },
+    "bundle":  {
+                   "active":  false
+               }
+}

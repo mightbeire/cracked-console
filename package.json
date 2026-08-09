@@ -1,0 +1,44 @@
+{
+  "name": "cracked-console",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "tauri": "tauri",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc -b --pretty false",
+    "lint": "node scripts/lint-project.mjs",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "visual:guard": "node scripts/visual-guard.mjs",
+    "config:validate": "node scripts/validate-community-config.mjs",
+    "config:validate:example": "node scripts/validate-community-config.mjs examples/starter-plan.example.json",
+    "verify": "npm run typecheck && npm run lint && npm run test:run && npm run config:validate:example && npm run build && npm run visual:guard",
+    "public:audit": "node scripts/public-release-audit.mjs",
+    "release:check": "npm run public:audit && npm run verify"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.11.1",
+    "@tauri-apps/plugin-dialog": "2",
+    "@tauri-apps/plugin-opener": "2",
+    "@tauri-apps/plugin-sql": "2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.11.4",
+    "@testing-library/jest-dom": "7.0.0",
+    "@testing-library/react": "16.3.2",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "6.0.5",
+    "jsdom": "30.0.1",
+    "typescript": "7.0.2",
+    "vite": "8.2.1",
+    "vitest": "4.1.10"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
