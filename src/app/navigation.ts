@@ -17,7 +17,7 @@ export interface NavigationItem {
 }
 
 export const navigationItems: readonly NavigationItem[] = [
-  { id: "today", label: "Today" },
+  { id: "today", label: "This Week" },
   { id: "curriculum", label: "Curriculum" },
   { id: "proof", label: "Proof" },
   { id: "projects", label: "Projects" },

@@ -165,6 +165,12 @@ pub fn run() {
             sql: include_str!("../migrations/0006_settings_runtime.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 7,
+            description: "create_week_mastery_schema",
+            sql: include_str!("../migrations/0007_week_mastery.sql"),
+            kind: MigrationKind::Up,
+        },
     ];
 
     tauri::Builder::default()

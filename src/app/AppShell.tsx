@@ -4,7 +4,7 @@ import { initializeRuntime } from "../data/runtimeRepository";
 import { getStartupSection } from "../data/settingsRepository";
 import { Sidebar } from "./Sidebar";
 import type { AppSection } from "./navigation";
-import { TodayView } from "../features/today/TodayView";
+import { ThisWeekView } from "../features/week/ThisWeekView";
 import { CurriculumView } from "../features/curriculum/CurriculumView";
 import { ProofView } from "../features/proof/ProofView";
 import { ProjectsView } from "../features/projects/ProjectsView";
@@ -94,7 +94,7 @@ function ReadyShell({
     <div className="app-shell">
       <Sidebar active={section} onNavigate={setSection} />
       <main className={`main-content ${contentClass}`}>
-        {section === "today" ? <TodayView planSummary={planSummary} /> : null}
+        {section === "today" ? <ThisWeekView planSummary={planSummary} /> : null}
         {section === "curriculum" ? <CurriculumView planSummary={planSummary} /> : null}
         {section === "proof" ? <ProofView /> : null}
         {section === "projects" ? <ProjectsView /> : null}
