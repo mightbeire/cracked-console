@@ -2,13 +2,13 @@
 
 Cracked Console is a local-first desktop application for structured, self-directed learning.
 
-You define the learning plan. Cracked Console provides the execution system.
+You define the learning plan. Cracked Console provides the execution, proof, evidence, and review system.
 
 The Community Edition does not include a prescribed curriculum. Core use does not require an account, hosted database, API key, or mandatory AI service. Your plan and execution records stay on your computer.
 
 ## What It Does
 
-- **Today:** Execute the current plan day.
+- **This Week:** See the current weekly driver, mastery state, and today's execution work.
 - **Curriculum:** Browse and search the imported plan.
 - **Proof:** Record assessment attempts and repair work.
 - **Projects:** Complete project milestones with evidence.
@@ -17,8 +17,26 @@ The Community Edition does not include a prescribed curriculum. Core use does no
 - **Reading:** Run an optional reading track.
 - **Practice:** Run an optional practical learning track.
 - **Guide:** Search the local operating manual.
-- **Progress:** Review factual progress.
-- **Settings:** Manage startup behavior, backups, restore, and data health.
+- **Progress:** Review factual progress, including proven weeks when the plan uses weekly mastery.
+- **Settings:** Manage startup behavior, backups, explicit main-plan replacement, restore, and data health.
+
+## Weekly Drivers
+
+Ordinary schema-v1 plans remain valid.
+
+A plan can optionally define a weekly learning contract with non-required `WEEK_*` blocks. Cracked Console renders those contract sections in **This Week** while preserving the normal day/block execution model underneath.
+
+A V3-style week is `NOT_STARTED`, `IN_PROGRESS`, or `PROVEN`.
+
+`PROVEN` requires:
+
+- a passing independent assessment linked to the week;
+- at least one verified evidence item linked to the week;
+- zero open repair work linked to the week.
+
+Completing days or consuming resources does not automatically prove mastery.
+
+See [Configuration](docs/CONFIGURATION.md) for the weekly-driver convention.
 
 ## Local-First Design
 
@@ -51,6 +69,8 @@ npm run config:validate -- user-config/plan.json
 ```
 
 The desktop application validates the file again before import.
+
+Normal import does not overwrite an active plan. If you intentionally need to replace the main curriculum, export a backup first and use the explicit **Plan Replacement** action in Settings. Reading and Practice/Photography are preserved by that operation.
 
 ## Technology
 
