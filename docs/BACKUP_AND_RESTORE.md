@@ -6,21 +6,19 @@ The backup does not replace the original plan JSON.
 
 ## Backup Contents
 
-A current backup can contain week mastery state, day state, block state, definition-of-done state, learning logs, timers, evidence, assessments, repair tasks, skill-level assignments, project progress, reading progress and reports, practice progress and logs, settings, and activity history.
+A current backup can contain week mastery state, day state, block state, definition-of-done state, learning logs, timers, evidence, assessments, repair tasks, skill-level assignments, project progress, reading progress and reports, practice progress and logs, self-paced side-path item state and notes, settings, and activity history.
 
-Backup format v2 adds `user_week_state` so `NOT_STARTED`, `IN_PROGRESS`, and `PROVEN` week state can be restored with its linked proof assessment.
+Backup format v3 adds `side_path_item_state` so self-paced path status and notes are restored.
 
-Existing format-v1 backups remain supported. Because v1 predates week mastery, restoring a v1 backup restores the older mutable records but does not recreate week-mastery rows that did not exist in that format.
+Backup format v2 added `user_week_state` for week mastery.
+
+Formats v1 and v2 remain supported. Older formats cannot restore state that did not exist when those formats were created.
 
 ## Export
 
-Open **Settings**.
+Open **Settings** and select **Export backup**.
 
-Select **Export backup**.
-
-Choose a location outside the repository.
-
-Keep more than one backup when the records matter to you.
+Choose a location outside the repository. Keep more than one backup when the records matter to you.
 
 ## Inspect Before Restore
 
@@ -32,13 +30,9 @@ Do not restore a backup with an invalid checksum.
 
 ## Plan Identity
 
-Restore compares the backup with the current imported plan.
+Restore compares the backup with the current imported main plan. The comparison includes source SHA-256, day count, week count, start date, and end date.
 
-The comparison includes source SHA-256, day count, week count, start date, and end date.
-
-Restore fails when the plan identity does not match.
-
-This means a backup from an old curriculum cannot be restored over a different replacement curriculum merely because both have the same number of weeks.
+Restore fails when the plan identity does not match. A backup from an old curriculum cannot be restored over a different replacement curriculum merely because both have the same number of weeks.
 
 ## Confirm Restore
 
@@ -56,4 +50,4 @@ Restore replaces mutable local records in one database transaction.
 
 Export a backup before using **Settings → Plan Replacement**.
 
-Plan replacement is different from restore. It deliberately clears the current main curriculum so another plan can be imported while preserving the independent Reading and Practice/Photography tracks.
+Plan replacement is different from restore. It deliberately clears the current main curriculum so another plan can be imported while preserving independent Reading, Practice/Photography, and self-paced side paths with their local progress.
