@@ -4,10 +4,8 @@ import type {
   ConfigIssue,
   ConfigSummary,
 } from "../../engine/config/types";
-import {
-  parseCommunityConfig,
-  summarizeCommunityConfig,
-} from "../../engine/config/validate";
+import { summarizeCommunityConfig } from "../../engine/config/validate";
+import { parseCommunityConfigWithSidePaths } from "../../engine/config/parseConfig";
 import {
   getImportedConfigSummary,
   importCommunityConfig,
@@ -66,7 +64,7 @@ export function SetupView({ onConfigured }: { onConfigured?: () => void | Promis
 
     try {
       const raw = await readTextFile(path);
-      const parsed = parseCommunityConfig(raw);
+      const parsed = parseCommunityConfigWithSidePaths(raw);
       if (!parsed.config) {
         setIssues(parsed.issues);
         return;
