@@ -46,11 +46,12 @@ export function ProgressView({ planSummary }: { planSummary: ConfigSummary }) {
       <header className="page-header">
         <p className="eyebrow">FACTUAL PROGRESS</p>
         <h1>Progress</h1>
-        <p className="page-summary">Recorded work only. No XP, streaks, or automatic mastery.</p>
+        <p className="page-summary">Demonstrated outcomes first. Recorded work remains supporting context.</p>
       </header>
 
       <div className="progress-grid">
-        <article className="progress-metric"><span>ACTIVE DAYS</span><strong>{snapshot.completedActiveDays}/{snapshot.totalActiveDays}</strong><small>{snapshot.elapsedActiveDays} active days elapsed</small><Bar value={snapshot.completedActiveDays} max={snapshot.totalActiveDays} /></article>
+        <article className="progress-metric"><span>WEEKS PROVEN</span><strong>{snapshot.provenWeeks}/{snapshot.totalWeeks}</strong><small>{snapshot.elapsedWeeks} weeks reached by the calendar</small><Bar value={snapshot.provenWeeks} max={snapshot.totalWeeks} /></article>
+        <article className="progress-metric"><span>EXECUTION DAYS</span><strong>{snapshot.completedActiveDays}/{snapshot.totalActiveDays}</strong><small>{snapshot.elapsedActiveDays} active days elapsed · supporting context only</small><Bar value={snapshot.completedActiveDays} max={snapshot.totalActiveDays} /></article>
         <article className="progress-metric"><span>REQUIRED BLOCKS</span><strong>{snapshot.completedRequiredBlocks}/{snapshot.elapsedRequiredBlocks}</strong><small>complete among elapsed required blocks</small><Bar value={snapshot.completedRequiredBlocks} max={snapshot.elapsedRequiredBlocks} /></article>
         <article className="progress-metric"><span>TRACKED WORK</span><strong>{hours}h {minutes}m</strong><small>completed block time</small></article>
         <article className="progress-metric"><span>PROOF</span><strong>{snapshot.passingAttempts}/{snapshot.assessmentAttempts}</strong><small>passing / all attempts · {snapshot.openRepairs} open repairs</small><Bar value={snapshot.passingAttempts} max={snapshot.assessmentAttempts} /></article>

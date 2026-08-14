@@ -1,17 +1,19 @@
-import { navigationItems, type AppSection } from "./navigation";
+import type { AppSection, NavigationItem } from "./navigation";
 
 export function Sidebar({
   active,
   onNavigate,
+  items,
 }: {
   active: AppSection;
   onNavigate: (section: AppSection) => void;
+  items: readonly NavigationItem[];
 }) {
   return (
     <aside className="sidebar" aria-label="Primary navigation">
       <div className="brand">Cracked Console</div>
       <nav className="nav-list">
-        {navigationItems.map((item) => (
+        {items.map((item) => (
           <button
             className={`nav-item ${item.id === active ? "nav-item-active" : ""}`}
             key={item.id}

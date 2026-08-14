@@ -16,6 +16,9 @@ export async function getProgressSnapshot(
     "skillLevels" | "recentActivity"
   >>>(
     `SELECT
+      (SELECT COUNT(*) FROM curriculum_weeks) AS totalWeeks,
+      (SELECT COUNT(DISTINCT week_id) FROM curriculum_days WHERE day_number <= $1) AS elapsedWeeks,
+      (SELECT COUNT(*) FROM user_week_state WHERE status='PROVEN') AS provenWeeks,
       (SELECT COUNT(*) FROM curriculum_days WHERE is_rest_day=0) AS totalActiveDays,
       (SELECT COUNT(*) FROM curriculum_days WHERE is_rest_day=0 AND day_number <= $1) AS elapsedActiveDays,
       (SELECT COUNT(*) FROM user_day_state uds JOIN curriculum_days d ON d.id=uds.day_id WHERE d.is_rest_day=0 AND uds.status='COMPLETED') AS completedActiveDays,

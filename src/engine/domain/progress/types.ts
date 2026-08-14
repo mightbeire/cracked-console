@@ -11,6 +11,9 @@ export interface SkillLevelCount {
 }
 
 export interface ProgressSnapshot {
+  totalWeeks: number;
+  elapsedWeeks: number;
+  provenWeeks: number;
   totalActiveDays: number;
   elapsedActiveDays: number;
   completedActiveDays: number;

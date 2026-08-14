@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "plan": {
+    "version": "side-path-example-1.0",
+    "title": "Side Path Example",
+    "startDate": "2030-01-07",
+    "weeks": [
+      {
+        "title": "One Small Week",
+        "phase": 1,
+        "days": [
+          {
+            "date": "2030-01-07",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Main curriculum work",
+                "plannedMinutes": 30,
+                "instructions": "Complete one small main-curriculum task.",
+                "required": true
+              }
+            ],
+            "definitionOfDone": ["One original result exists."]
+          }
+        ]
+      }
+    ]
+  },
+  "skills": [],
+  "projects": [],
+  "sidePaths": [
+    {
+      "code": "CURIOSITY_LAB",
+      "title": "Curiosity Lab",
+      "description": "A neutral self-paced lane that never creates calendar debt.",
+      "stages": [
+        {
+          "title": "Start Small",
+          "description": "Explore the subject at an easy entry point.",
+          "items": [
+            {
+              "type": "VIDEO",
+              "title": "A clear introduction",
+              "creator": "Example Creator",
+              "description": "Watch when useful. No deadline and no mastery gate.",
+              "difficulty": "BEGINNER",
+              "url": "https://example.com/introduction"
+            },
+            {
+              "type": "BOOK",
+              "title": "An optional next step",
+              "description": "Read only when curiosity pulls you further.",
+              "difficulty": "BEGINNER"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
