@@ -1,6 +1,6 @@
 # User Guide
 
-Cracked Console separates configuration, execution, proof, review, and optional self-paced exploration.
+Cracked Console separates configuration, execution, teaching resources, proof, review, and optional self-paced exploration.
 
 ## First Run
 
@@ -25,6 +25,25 @@ A V3-style week has three mastery states:
 A week can become `PROVEN` only when it has a passing independent assessment linked to that week, at least one verified week-linked evidence item, and zero open repair tasks linked to that week.
 
 Completed days and watched resources do not prove a week.
+
+## Teacher Shelf
+
+A weekly-driver plan can provide precise resource cards through `WEEK_RESOURCE_*` metadata blocks.
+
+When configured, **This Week** shows a Teacher Shelf with only the resources assigned to that week's work. Cards can identify a primary teacher, visual explanation, interactive practice, lab, rescue source, or authoritative reference.
+
+A card can also show the exact assigned page/module/episode/segment, what to do, what to notice, why the source was selected, and whether the plan author verified the assignment.
+
+Use the shelf as a controlled teaching layer:
+
+1. open only the resource named by the task;
+2. consume only the assigned portion;
+3. close it and make a genuine attempt;
+4. use rescue material only for the gap the attempt exposed;
+5. return to independent work;
+6. prove learning through assessment and evidence, not watch time.
+
+Teacher Shelf resource blocks are not required attendance work and do not create Learning Debt by themselves.
 
 ## Curriculum
 
