@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ConfigSummary } from "../../engine/config/types";
+import { CurriculumText } from "../../components/CurriculumText/CurriculumText";
 import { getSchedulePosition } from "../../data/planMetaRepository";
 import {
   getWeekMasteryByDay,
@@ -7,13 +8,23 @@ import {
   startWeek,
   type WeekMasterySnapshot,
 } from "../../data/weekMasteryRepository";
+import {
+  getWeekContractSections,
+  type WeekContractSection,
+} from "../../data/weekContractRepository";
 import { TodayView } from "../today/TodayView";
 
 type ViewState =
   | { status: "LOADING" }
   | { status: "PRE_START"; daysUntilStart: number }
   | { status: "COMPLETE" }
-  | { status: "READY"; dayNumber: number; week: WeekMasterySnapshot; developmentOverride: boolean }
+  | {
+      status: "READY";
+      dayNumber: number;
+      week: WeekMasterySnapshot;
+      contractSections: WeekContractSection[];
+      developmentOverride: boolean;
+    }
   | { status: "ERROR"; message: string };
 
 function scoreLabel(week: WeekMasterySnapshot): string {
@@ -21,6 +32,10 @@ function scoreLabel(week: WeekMasterySnapshot): string {
     return "No passing independent proof yet";
   }
   return `${week.passingAssessmentScore}/${week.passingAssessmentMaxScore} independent proof`;
+}
+
+function sectionKicker(type: string): string {
+  return type.replace(/^WEEK_/, "").replaceAll("_", " ");
 }
 
 export function ThisWeekView({ planSummary }: { planSummary: ConfigSummary }) {
@@ -45,10 +60,12 @@ export function ThisWeekView({ planSummary }: { planSummary: ConfigSummary }) {
       }
 
       const week = await getWeekMasteryByDay(position.dayNumber);
+      const contractSections = await getWeekContractSections(week.weekId);
       setState({
         status: "READY",
         dayNumber: position.dayNumber,
         week,
+        contractSections,
         developmentOverride,
       });
     } catch (error: unknown) {
@@ -116,10 +133,28 @@ export function ThisWeekView({ planSummary }: { planSummary: ConfigSummary }) {
         {state.developmentOverride ? <p className="dev-note">Development day override is active. Canonical schedule has not moved.</p> : null}
       </header>
 
+      {state.contractSections.length > 0 ? (
+        <div className="mission-stack" aria-label="Weekly driver contract">
+          {state.contractSections.map((section) => (
+            <section className="mission-block" key={section.id} aria-labelledby={`week-contract-${section.id}`}>
+              <p className="section-kicker">{sectionKicker(section.type)}</p>
+              <h2 id={`week-contract-${section.id}`}>{section.label}</h2>
+              <CurriculumText markdown={section.instructionsMarkdown} />
+            </section>
+          ))}
+        </div>
+      ) : (
+        <section className="mission-block">
+          <p className="section-kicker">WEEKLY DRIVER</p>
+          <h2>Legacy week format</h2>
+          <p>This imported plan has no WEEK_* contract blocks. Daily execution still works, but V3 plans should define the weekly outcome, prerequisite, learning, lab, retrieval, and mastery contract with reserved WEEK_* blocks.</p>
+        </section>
+      )}
+
       <section className="mission-block" aria-labelledby="weekly-mastery-title">
         <div className="mission-heading-row">
           <div>
-            <p className="section-kicker">WEEKLY DRIVER</p>
+            <p className="section-kicker">MASTERY GATE</p>
             <h2 id="weekly-mastery-title">Outcome over attendance</h2>
           </div>
           <div className="mission-meta">
