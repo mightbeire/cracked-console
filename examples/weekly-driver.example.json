@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "plan": {
+    "version": "weekly-driver-example-1.0",
+    "title": "Weekly Driver Example",
+    "startDate": "2030-01-07",
+    "weeks": [
+      {
+        "title": "Observe, Build, Explain",
+        "phase": 1,
+        "days": [
+          {
+            "date": "2030-01-07",
+            "label": "Monday execution",
+            "rest": false,
+            "blocks": [
+              {
+                "type": "FOCUS",
+                "label": "Work the concept",
+                "plannedMinutes": 45,
+                "instructions": "Study one small concept, close the example, and reproduce the idea in your own work.",
+                "required": true
+              },
+              {
+                "type": "WEEK_MASTERY_PROOF",
+                "label": "Week 1 Mastery Proof",
+                "plannedMinutes": 1,
+                "instructions": "# Week 1 Mastery Proof\nAttempt the configured transfer task independently. Record the scored attempt in Proof, then attach and verify representative evidence before proving the week.",
+                "required": false
+              }
+            ],
+            "definitionOfDone": [
+              "One original attempt exists.",
+              "The learning log states what remains unclear."
+            ]
+          },
+          {
+            "date": "2030-01-08",
+            "label": "Rest and contract metadata",
+            "rest": true,
+            "blocks": [
+              {
+                "type": "WEEK_WHY",
+                "label": "Why this week exists",
+                "plannedMinutes": 1,
+                "instructions": "This neutral example demonstrates how a weekly driver can explain purpose without turning the explanation into required attendance work.",
+                "required": false
+              },
+              {
+                "type": "WEEK_PREREQUISITES",
+                "label": "Prerequisites",
+                "plannedMinutes": 1,
+                "instructions": "No prior knowledge is assumed for this demonstration.",
+                "required": false
+              },
+              {
+                "type": "WEEK_OUTCOME",
+                "label": "Expected outcome",
+                "plannedMinutes": 1,
+                "instructions": "By the end of the week, produce one original result and explain the idea without copying the source example.",
+                "required": false
+              },
+              {
+                "type": "WEEK_RETRIEVAL",
+                "label": "Cold retrieval",
+                "plannedMinutes": 1,
+                "instructions": "Before reopening notes, explain the central idea and identify one mistake from the first attempt.",
+                "required": false
+              },
+              {
+                "type": "WEEK_EVIDENCE",
+                "label": "Evidence requirement",
+                "plannedMinutes": 1,
+                "instructions": "Save and verify at least one representative evidence item linked to this week.",
+                "required": false
+              }
+            ],
+            "definitionOfDone": []
+          }
+        ]
+      }
+    ]
+  },
+  "skills": [],
+  "projects": []
+}
