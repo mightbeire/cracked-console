@@ -5,6 +5,7 @@ export interface CommunityConfig {
   projects: ProjectConfig[];
   reading?: ReadingConfig;
   practice?: PracticeConfig;
+  sidePaths?: SidePathConfig[];
 }
 
 export interface PlanConfig {
@@ -116,6 +117,28 @@ export interface PracticeChallengeConfig {
   prompt: string;
 }
 
+export interface SidePathConfig {
+  code: string;
+  title: string;
+  description: string;
+  stages: SidePathStageConfig[];
+}
+
+export interface SidePathStageConfig {
+  title: string;
+  description: string;
+  items: SidePathItemConfig[];
+}
+
+export interface SidePathItemConfig {
+  type: string;
+  title: string;
+  creator?: string;
+  description: string;
+  difficulty?: string;
+  url?: string;
+}
+
 export interface ConfigIssue {
   path: string;
   message: string;
@@ -136,4 +159,6 @@ export interface ConfigSummary {
   readingBooks: number;
   practiceStages: number;
   practiceLessons: number;
+  sidePaths: number;
+  sidePathItems: number;
 }
