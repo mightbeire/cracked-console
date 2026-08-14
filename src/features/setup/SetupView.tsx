@@ -27,6 +27,18 @@ function fileName(path: string): string {
   return path.split(/[\\/]/).at(-1) ?? path;
 }
 
+function withSidePathSummary(config: CommunityConfig): ConfigSummary {
+  const base = summarizeCommunityConfig(config);
+  return {
+    ...base,
+    sidePaths: config.sidePaths?.length ?? 0,
+    sidePathItems: config.sidePaths?.reduce(
+      (sum, path) => sum + path.stages.reduce((stageSum, stage) => stageSum + stage.items.length, 0),
+      0,
+    ) ?? 0,
+  };
+}
+
 export function SetupView({ onConfigured }: { onConfigured?: () => void | Promise<void> }) {
   const [configured, setConfigured] = useState<ConfigSummary | null>(null);
   const [pending, setPending] = useState<PendingConfig | null>(null);
@@ -65,7 +77,7 @@ export function SetupView({ onConfigured }: { onConfigured?: () => void | Promis
         fileName: fileName(path),
         raw,
         config: parsed.config,
-        summary: summarizeCommunityConfig(parsed.config),
+        summary: withSidePathSummary(parsed.config),
       });
     } catch (error: unknown) {
       setMessage(error instanceof Error ? error.message : String(error));
@@ -111,10 +123,7 @@ export function SetupView({ onConfigured }: { onConfigured?: () => void | Promis
       <main className="community-stage">
         <p className="eyebrow">CONFIGURATION READY</p>
         <h1>{configured.title}</h1>
-        <p>
-          The plan is stored in your local SQLite database.
-          Stage 4 will connect the full execution interface to this imported plan.
-        </p>
+        <p>The plan is stored in your local SQLite database.</p>
         <ConfigSummaryGrid summary={configured} />
         {message ? <p className="setup-message">{message}</p> : null}
       </main>
@@ -125,18 +134,10 @@ export function SetupView({ onConfigured }: { onConfigured?: () => void | Promis
     <main className="community-stage">
       <p className="eyebrow">CRACKED CONSOLE / COMMUNITY EDITION</p>
       <h1>Set up your learning plan.</h1>
-      <p>
-        Cracked Console does not include a prescribed curriculum.
-        Choose a plan JSON file that you own.
-      </p>
+      <p>Cracked Console does not include a prescribed curriculum. Choose a plan JSON file that you own.</p>
 
       <div className="setup-actions">
-        <button
-          className="primary-button"
-          disabled={busy}
-          onClick={() => void chooseConfig()}
-          type="button"
-        >
+        <button className="primary-button" disabled={busy} onClick={() => void chooseConfig()} type="button">
           Choose plan JSON
         </button>
       </div>
@@ -150,9 +151,7 @@ export function SetupView({ onConfigured }: { onConfigured?: () => void | Promis
               <span>{issue.message}</span>
             </div>
           ))}
-          {issues.length > 20 ? (
-            <small>{issues.length - 20} more validation issues are not shown.</small>
-          ) : null}
+          {issues.length > 20 ? <small>{issues.length - 20} more validation issues are not shown.</small> : null}
         </section>
       ) : null}
 
@@ -166,17 +165,9 @@ export function SetupView({ onConfigured }: { onConfigured?: () => void | Promis
           <ConfigSummaryGrid summary={pending.summary} />
           <div className="setup-note">
             <strong>This import creates the local plan.</strong>
-            <span>
-              Stage 3 does not replace an existing plan.
-              Review the JSON before you import it.
-            </span>
+            <span>Normal import does not replace an existing main plan. Self-paced side paths are independent and do not create calendar debt.</span>
           </div>
-          <button
-            className="primary-button"
-            disabled={busy}
-            onClick={() => void importConfig()}
-            type="button"
-          >
+          <button className="primary-button" disabled={busy} onClick={() => void importConfig()} type="button">
             Import this plan
           </button>
         </section>
@@ -198,6 +189,7 @@ function ConfigSummaryGrid({ summary }: { summary: ConfigSummary }) {
     ["Projects", String(summary.projects)],
     ["Reading books", String(summary.readingBooks)],
     ["Practice stages", `${summary.practiceStages} stages / ${summary.practiceLessons} lessons`],
+    ["Self-paced paths", `${summary.sidePaths ?? 0} paths / ${summary.sidePathItems ?? 0} items`],
   ];
 
   return (
