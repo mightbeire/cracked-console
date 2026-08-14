@@ -198,6 +198,7 @@ export async function getCurriculumDayDetail(dayNumber: number): Promise<Curricu
        is_required AS required
      FROM curriculum_blocks
      WHERE day_id=$1
+       AND upper(block_type) NOT LIKE 'WEEK_RESOURCE_%'
      ORDER BY sort_order`,
     [row.id],
   );
