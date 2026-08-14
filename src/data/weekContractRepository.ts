@@ -19,6 +19,7 @@ export async function getWeekContractSections(weekId: number): Promise<WeekContr
      JOIN curriculum_days d ON d.id = b.day_id
      WHERE d.week_id = $1
        AND upper(b.block_type) LIKE 'WEEK_%'
+       AND upper(b.block_type) NOT LIKE 'WEEK_RESOURCE_%'
      ORDER BY d.day_number, b.sort_order`,
     [weekId],
   );
