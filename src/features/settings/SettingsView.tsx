@@ -137,20 +137,20 @@ export function SettingsView({ planSummary }: { planSummary: ConfigSummary }) {
       </section>
 
       <section className="settings-section">
-        <div className="section-heading"><div><p className="section-kicker">PLAN REPLACEMENT</p><h2>Start a new curriculum safely</h2></div></div>
+        <div className="section-heading"><div><p className="section-kicker">PLAN REPLACEMENT</p><h2>Start a new main curriculum safely</h2></div></div>
         <p className="settings-copy">
-          Export a backup first. Resetting clears the imported plan and plan-owned execution/catalog state so a new plan can be imported. Historical proof and evidence remain local but are detached from old day and week numbers, so they cannot prove the replacement curriculum.
+          Export a backup first. Resetting clears the imported main curriculum, its execution state, its skills catalog, and its project catalog so a replacement plan can be imported. Historical assessments and evidence stay local but are detached from old day and week numbers, so they cannot prove the replacement curriculum.
         </p>
         <div className="rest-rule">
-          <strong>This is not a database wipe.</strong>
-          <span>App settings, activity history, detached assessments/evidence, and standalone practice logs are retained.</span>
+          <strong>Reading and Practice/Photography are preserved.</strong>
+          <span>The reset does not clear their curriculum, progress, reports, lessons, preferences, or logs. App settings and activity history also remain.</span>
         </div>
         <label>
           <span className="field-label">Type RESET PLAN to continue</span>
           <input className="plain-input" value={resetConfirm} onChange={(event) => setResetConfirm(event.target.value)} />
         </label>
         <button className="primary-button" disabled={resetBusy || resetConfirm !== "RESET PLAN"} onClick={() => void resetPlan()} type="button">
-          {resetBusy ? "Resetting..." : "Reset imported plan"}
+          {resetBusy ? "Resetting..." : "Reset imported main plan"}
         </button>
       </section>
 
