@@ -28,7 +28,7 @@ export function inferAssessmentType(title: string): AssessmentType {
 }
 
 export function isAssessmentHeading(title: string): boolean {
-  return /(PROOF|EXAM|DEFENCE|CHECK)/i.test(title);
+  return /\b(PROOF|EXAM|DEFENCE|CHECK)\b/i.test(title);
 }
 
 export function assessmentTypeLabel(type: AssessmentType): string {
