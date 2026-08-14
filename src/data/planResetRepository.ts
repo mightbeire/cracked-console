@@ -28,8 +28,8 @@ export async function resetImportedPlanForReplacement(): Promise<void> {
     "UPDATE evidence SET day_id = NULL, week_number = NULL",
   );
 
-  // Old unresolved repair work belongs to the old curriculum. Keep the record,
-  // but close it before the old day/block references are removed.
+  // Old unresolved repair work belongs to the old main curriculum. Keep the
+  // record, but close it before old day/block references are removed.
   operation(
     operations,
     `UPDATE repair_tasks
@@ -43,20 +43,12 @@ export async function resetImportedPlanForReplacement(): Promise<void> {
     [timestamp],
   );
 
-  // Catalog-backed state must be rebuilt from the next imported plan.
+  // Main-curriculum catalogs are version-specific and are rebuilt by the next
+  // import. Independent Reading and Practice/Photography tables are deliberately
+  // untouched so their curriculum, logs, preferences, reports, and progress
+  // survive a V2 -> V3 main-curriculum replacement.
   operation(operations, "DELETE FROM project_catalog");
   operation(operations, "DELETE FROM skills");
-
-  operation(operations, "DELETE FROM reading_books");
-  operation(operations, "DELETE FROM reading_months");
-
-  // Remove self-references before deleting practice stages. Practice logs are
-  // preserved; their lesson_id becomes NULL through the existing foreign key.
-  operation(operations, "UPDATE practice_stages SET unlock_after_stage_id = NULL");
-  operation(operations, "DELETE FROM practice_challenges");
-  operation(operations, "DELETE FROM practice_preferences");
-  operation(operations, "DELETE FROM practice_categories");
-  operation(operations, "DELETE FROM practice_stages");
 
   // Deleting the curriculum version cascades through week/day/block execution
   // state, timers, learning logs, resources, and the V3 user_week_state table.
@@ -68,7 +60,7 @@ export async function resetImportedPlanForReplacement(): Promise<void> {
        (event_type, entity_type, entity_id, summary, created_at)
      VALUES ('PLAN_RESET', 'curriculum', NULL, $1, $2)`,
     [
-      "Imported plan cleared for an explicit replacement. Historical evidence and proof were detached from old week/day references.",
+      "Main curriculum cleared for explicit replacement. Historical evidence and proof were detached from old week/day references. Reading and Practice were preserved.",
       timestamp,
     ],
   );
