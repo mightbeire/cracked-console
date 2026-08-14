@@ -145,7 +145,7 @@ export async function getWeekMasteryByDay(dayNumber: number): Promise<WeekMaster
     passingAssessmentMaxScore: passing?.maxScore ?? null,
     verifiedEvidenceCount,
     openRepairCount,
-    canProve: Boolean(passing) && openRepairCount === 0,
+    canProve: Boolean(passing) && verifiedEvidenceCount > 0 && openRepairCount === 0,
   };
 }
 
@@ -168,6 +168,9 @@ export async function proveWeek(dayNumber: number): Promise<void> {
   if (!snapshot.passingAssessmentId) {
     throw new Error("A week needs a passing independent assessment before it can be proven.");
   }
+  if (snapshot.verifiedEvidenceCount < 1) {
+    throw new Error("A week needs at least one verified evidence item before it can be proven.");
+  }
   if (snapshot.openRepairCount > 0) {
     throw new Error("Resolve the week's open repair work before proving the week.");
   }
@@ -188,6 +191,6 @@ export async function proveWeek(dayNumber: number): Promise<void> {
   await db.execute(
     `INSERT INTO activity_history (event_type, entity_type, entity_id, summary, created_at)
      VALUES ('WEEK_PROVEN', 'curriculum_week', $1, $2, $3)`,
-    [snapshot.weekId, `Week ${snapshot.weekNumber} proven by independent assessment.`, timestamp],
+    [snapshot.weekId, `Week ${snapshot.weekNumber} proven by assessment plus verified evidence.`, timestamp],
   );
 }
