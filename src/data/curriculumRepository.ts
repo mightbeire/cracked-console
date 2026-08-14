@@ -1,4 +1,5 @@
 import { getDatabase } from "./db";
+import { parseTeacherResourceMetadata } from "./weekTeacherShelfRepository";
 
 export interface CurriculumWeekSummary {
   weekNumber: number;
@@ -54,9 +55,33 @@ export type CurriculumSearchResult =
   | { kind: "WEEK"; key: string; title: string; meta: string; snippet: string; weekNumber: number }
   | { kind: "RESOURCE"; key: string; title: string; meta: string; snippet: string; url: string };
 
+interface TeacherResourceSearchRow {
+  id: number;
+  label: string;
+  instructionsJson: string;
+}
+
 function effectiveStatus(isRestDay: number, userStatus: string | null): string {
   if (isRestDay === 1) return "REST";
   return userStatus ?? "UPCOMING";
+}
+
+function parseTeacherResourceRows(rows: TeacherResourceSearchRow[]): CurriculumResource[] {
+  return rows.flatMap((row) => {
+    const metadata = parseTeacherResourceMetadata(row.instructionsJson);
+    if (!metadata) return [];
+    return [{ id: -row.id, label: row.label, url: metadata.url }];
+  });
+}
+
+function dedupeResources(resources: CurriculumResource[]): CurriculumResource[] {
+  const seen = new Set<string>();
+  return resources.filter((resource) => {
+    const key = `${resource.label}\n${resource.url}`.toLocaleLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 export async function getCurriculumWeeks(): Promise<CurriculumWeekSummary[]> {
@@ -198,13 +223,33 @@ export async function getCurriculumDayDetail(dayNumber: number): Promise<Curricu
 
 export async function getCurriculumResources(limit = 250): Promise<CurriculumResource[]> {
   const db = await getDatabase();
-  return db.select<CurriculumResource[]>(
-    `SELECT id,label,url
-     FROM curriculum_resources
-     ORDER BY label COLLATE NOCASE
-     LIMIT $1`,
-    [limit],
-  );
+  const [catalogResources, teacherRows] = await Promise.all([
+    db.select<CurriculumResource[]>(
+      `SELECT id,label,url
+       FROM curriculum_resources
+       ORDER BY label COLLATE NOCASE
+       LIMIT $1`,
+      [limit],
+    ),
+    db.select<TeacherResourceSearchRow[]>(
+      `SELECT
+         id,
+         label,
+         instructions_markdown AS instructionsJson
+       FROM curriculum_blocks
+       WHERE upper(block_type) LIKE 'WEEK_RESOURCE_%'
+       ORDER BY label COLLATE NOCASE
+       LIMIT $1`,
+      [limit],
+    ),
+  ]);
+
+  return dedupeResources([
+    ...catalogResources,
+    ...parseTeacherResourceRows(teacherRows),
+  ])
+    .sort((a, b) => a.label.localeCompare(b.label))
+    .slice(0, limit);
 }
 
 export async function searchCurriculum(rawQuery: string): Promise<CurriculumSearchResult[]> {
@@ -213,60 +258,75 @@ export async function searchCurriculum(rawQuery: string): Promise<CurriculumSear
   const db = await getDatabase();
   const like = `%${query}%`;
 
-  const dayRows = await db.select<Array<{
-    dayNumber: number;
-    dateLabel: string;
-    snippet: string;
-  }>>(
-    `SELECT
-       d.day_number AS dayNumber,
-       d.date_label AS dateLabel,
-       COALESCE((
-         SELECT group_concat(b.label || ': ' || b.instructions_markdown, ' ')
-         FROM curriculum_blocks b
-         WHERE b.day_id=d.id
-       ), '') AS snippet
-     FROM curriculum_days d
-     WHERE CAST(d.day_number AS TEXT) LIKE $1
-        OR d.date_label LIKE $1
-        OR EXISTS (
-          SELECT 1 FROM curriculum_blocks b
-          WHERE b.day_id=d.id
-            AND (b.label LIKE $1 OR b.instructions_markdown LIKE $1 OR b.block_type LIKE $1)
-        )
-     ORDER BY d.day_number
-     LIMIT 30`,
-    [like],
-  );
+  const [dayRows, weekRows, catalogResources, teacherRows] = await Promise.all([
+    db.select<Array<{
+      dayNumber: number;
+      dateLabel: string;
+      snippet: string;
+    }>>(
+      `SELECT
+         d.day_number AS dayNumber,
+         d.date_label AS dateLabel,
+         COALESCE((
+           SELECT group_concat(b.label || ': ' || b.instructions_markdown, ' ')
+           FROM curriculum_blocks b
+           WHERE b.day_id=d.id
+         ), '') AS snippet
+       FROM curriculum_days d
+       WHERE CAST(d.day_number AS TEXT) LIKE $1
+          OR d.date_label LIKE $1
+          OR EXISTS (
+            SELECT 1 FROM curriculum_blocks b
+            WHERE b.day_id=d.id
+              AND (b.label LIKE $1 OR b.instructions_markdown LIKE $1 OR b.block_type LIKE $1)
+          )
+       ORDER BY d.day_number
+       LIMIT 30`,
+      [like],
+    ),
+    db.select<Array<{
+      weekNumber: number;
+      dateRangeLabel: string;
+      title: string;
+    }>>(
+      `SELECT
+         week_number AS weekNumber,
+         date_range_label AS dateRangeLabel,
+         title
+       FROM curriculum_weeks
+       WHERE CAST(week_number AS TEXT) LIKE $1
+          OR title LIKE $1
+          OR date_range_label LIKE $1
+       ORDER BY week_number
+       LIMIT 20`,
+      [like],
+    ),
+    db.select<CurriculumResource[]>(
+      `SELECT id,label,url
+       FROM curriculum_resources
+       WHERE label LIKE $1 OR url LIKE $1
+       ORDER BY label COLLATE NOCASE
+       LIMIT 30`,
+      [like],
+    ),
+    db.select<TeacherResourceSearchRow[]>(
+      `SELECT
+         id,
+         label,
+         instructions_markdown AS instructionsJson
+       FROM curriculum_blocks
+       WHERE upper(block_type) LIKE 'WEEK_RESOURCE_%'
+         AND (label LIKE $1 OR instructions_markdown LIKE $1)
+       ORDER BY label COLLATE NOCASE
+       LIMIT 30`,
+      [like],
+    ),
+  ]);
 
-  const weekRows = await db.select<Array<{
-    weekNumber: number;
-    dateRangeLabel: string;
-    title: string;
-  }>>(
-    `SELECT
-       week_number AS weekNumber,
-       date_range_label AS dateRangeLabel,
-       title
-     FROM curriculum_weeks
-     WHERE CAST(week_number AS TEXT) LIKE $1
-        OR title LIKE $1
-        OR date_range_label LIKE $1
-     ORDER BY week_number
-     LIMIT 20`,
-    [like],
-  );
-
-  const resources = await db.select<CurriculumResource[]>(
-    `SELECT id,label,url
-     FROM curriculum_resources
-     WHERE label LIKE $1 OR url LIKE $1
-     ORDER BY label COLLATE NOCASE
-     LIMIT 30`,
-    [like],
-  );
-
+  const teacherResources = parseTeacherResourceRows(teacherRows);
+  const resources = dedupeResources([...catalogResources, ...teacherResources]);
   const trim = (value: string) => value.replace(/\s+/g, " ").trim().slice(0, 180);
+
   return [
     ...dayRows.map((row): CurriculumSearchResult => ({
       kind: "DAY",
@@ -286,9 +346,9 @@ export async function searchCurriculum(rawQuery: string): Promise<CurriculumSear
     })),
     ...resources.map((row): CurriculumSearchResult => ({
       kind: "RESOURCE",
-      key: `resource-${row.id}`,
+      key: row.id < 0 ? `teacher-resource-${Math.abs(row.id)}` : `resource-${row.id}`,
       title: row.label,
-      meta: "Resource",
+      meta: row.id < 0 ? "Teacher Shelf resource" : "Resource",
       snippet: row.url,
       url: row.url,
     })),
