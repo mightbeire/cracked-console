@@ -4,7 +4,8 @@ import { setSetting } from "./settingsRepository";
 import { readTextFile, writeTextFile } from "../engine/platform/nativeFiles";
 
 const BACKUP_FORMAT = "cracked-console-community-backup";
-const BACKUP_VERSION = 1;
+const BACKUP_VERSION = 2;
+const LEGACY_BACKUP_VERSION = 1;
 
 const tableSpecs = [
   ["user_day_state", ["day_id","status","started_at","completed_at","actual_minutes","completion_override","override_reason"]],
@@ -14,6 +15,7 @@ const tableSpecs = [
   ["timers", ["block_id","state","accumulated_seconds","started_at","updated_at"]],
   ["evidence", ["id","title","description","evidence_type","day_id","week_number","location_or_url","confidence","verified","created_at"]],
   ["assessments", ["id","assessment_type","source_day_id","source_week_number","parent_assessment_id","attempt_number","max_score","score","is_independent","status","notes","created_at"]],
+  ["user_week_state", ["week_id","status","started_at","proven_at","proof_assessment_id"]],
   ["assessment_errors", ["id","assessment_id","category","description","repair_required"]],
   ["assessment_evidence", ["assessment_id","evidence_id"]],
   ["repair_tasks", ["id","source_day_id","source_block_id","assessment_id","reason","priority","dependency_risk","status","scheduled_day_id","created_at","completed_at","resolution_note"]],
@@ -59,6 +61,13 @@ export interface BackupPreview {
   sourceSha256: string;
   checksumValid: boolean;
   document: BackupDocument;
+}
+
+function specsForVersion(version: number) {
+  if (version === LEGACY_BACKUP_VERSION) {
+    return tableSpecs.filter(([table]) => table !== "user_week_state");
+  }
+  return tableSpecs;
 }
 
 async function sha256(text: string): Promise<string> {
@@ -131,11 +140,14 @@ export async function exportBackup(path: string): Promise<BackupDocument> {
 }
 
 function validateStructure(document: BackupDocument): void {
-  if (document.format !== BACKUP_FORMAT || document.version !== BACKUP_VERSION) {
+  if (
+    document.format !== BACKUP_FORMAT
+    || ![LEGACY_BACKUP_VERSION, BACKUP_VERSION].includes(document.version)
+  ) {
     throw new Error("Unsupported backup format.");
   }
 
-  for (const [table] of tableSpecs) {
+  for (const [table] of specsForVersion(document.version)) {
     if (!Array.isArray(document.data?.[table])) {
       throw new Error(`Backup is missing table: ${table}`);
     }
@@ -185,7 +197,7 @@ export async function restoreBackup(document: BackupDocument): Promise<void> {
   const deleteOrder = [
     "skill_level_assignment_evidence","assessment_evidence","assessment_errors",
     "repair_tasks","project_milestone_state","skill_level_assignments",
-    "assessments","evidence","practice_logs","activity_history","project_records",
+    "user_week_state","assessments","evidence","practice_logs","activity_history","project_records",
     "reading_reports","reading_book_state","practice_lesson_state",
     "practice_preferences","timers","learning_logs","user_dod_state",
     "user_block_state","user_day_state","app_settings",
@@ -195,7 +207,7 @@ export async function restoreBackup(document: BackupDocument): Promise<void> {
     operations.push({ sql: `DELETE FROM ${table}`, params: [] });
   }
 
-  for (const [table, columns] of tableSpecs) {
+  for (const [table, columns] of specsForVersion(document.version)) {
     for (const row of document.data[table] ?? []) {
       const placeholders = columns
         .map((_, index) => `$${index + 1}`)
