@@ -4,7 +4,8 @@ import { setSetting } from "./settingsRepository";
 import { readTextFile, writeTextFile } from "../engine/platform/nativeFiles";
 
 const BACKUP_FORMAT = "cracked-console-community-backup";
-const BACKUP_VERSION = 2;
+const BACKUP_VERSION = 3;
+const WEEK_MASTERY_BACKUP_VERSION = 2;
 const LEGACY_BACKUP_VERSION = 1;
 
 const tableSpecs = [
@@ -28,6 +29,7 @@ const tableSpecs = [
   ["practice_lesson_state", ["lesson_id","learned","practiced","reviewed","selected_explained","notes","completed_at"]],
   ["practice_logs", ["id","lesson_id","title","practice_date","goal","quantity","representative_file","best_notes","worst_notes","reflection","created_at"]],
   ["practice_preferences", ["category_id","rating","note","updated_at"]],
+  ["side_path_item_state", ["item_id","status","note","started_at","completed_at"]],
   ["activity_history", ["id","event_type","entity_type","entity_id","summary","created_at"]],
   ["app_settings", ["key","value","updated_at"]],
 ] as const;
@@ -50,10 +52,7 @@ interface BackupPayload {
   data: BackupData;
 }
 
-export interface BackupDocument extends BackupPayload {
-  checksumSha256: string;
-}
-
+export interface BackupDocument extends BackupPayload { checksumSha256: string; }
 export interface BackupPreview {
   path: string;
   createdAt: string;
@@ -65,19 +64,17 @@ export interface BackupPreview {
 
 function specsForVersion(version: number) {
   if (version === LEGACY_BACKUP_VERSION) {
-    return tableSpecs.filter(([table]) => table !== "user_week_state");
+    return tableSpecs.filter(([table]) => table !== "user_week_state" && table !== "side_path_item_state");
+  }
+  if (version === WEEK_MASTERY_BACKUP_VERSION) {
+    return tableSpecs.filter(([table]) => table !== "side_path_item_state");
   }
   return tableSpecs;
 }
 
 async function sha256(text: string): Promise<string> {
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(text),
-  );
-  return Array.from(new Uint8Array(digest))
-    .map((value) => value.toString(16).padStart(2, "0"))
-    .join("");
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(digest)).map((value) => value.toString(16).padStart(2, "0")).join("");
 }
 
 function payloadOf(document: BackupDocument): BackupPayload {
@@ -87,21 +84,10 @@ function payloadOf(document: BackupDocument): BackupPayload {
 
 async function currentCurriculum() {
   const db = await getDatabase();
-  const rows = await db.select<Array<{
-    sourceSha256: string;
-    dayCount: number;
-    weekCount: number;
-    startDate: string;
-    endDate: string;
-  }>>(
-    `SELECT
-       source_sha256 AS sourceSha256,
-       day_count AS dayCount,
-       week_count AS weekCount,
-       start_date AS startDate,
-       end_date AS endDate
-     FROM curriculum_versions
-     LIMIT 1`,
+  const rows = await db.select<Array<{ sourceSha256: string; dayCount: number; weekCount: number; startDate: string; endDate: string }>>(
+    `SELECT source_sha256 AS sourceSha256, day_count AS dayCount, week_count AS weekCount,
+            start_date AS startDate, end_date AS endDate
+     FROM curriculum_versions LIMIT 1`,
   );
   const row = rows[0];
   if (!row) throw new Error("Plan identity is missing.");
@@ -111,13 +97,9 @@ async function currentCurriculum() {
 export async function createBackupDocument(): Promise<BackupDocument> {
   const db = await getDatabase();
   const data: BackupData = {};
-
   for (const [table] of tableSpecs) {
-    data[table] = await db.select<Array<Record<string, unknown>>>(
-      `SELECT * FROM ${table} ORDER BY rowid`,
-    );
+    data[table] = await db.select<Array<Record<string, unknown>>>(`SELECT * FROM ${table} ORDER BY rowid`);
   }
-
   const payload: BackupPayload = {
     format: BACKUP_FORMAT,
     version: BACKUP_VERSION,
@@ -125,11 +107,7 @@ export async function createBackupDocument(): Promise<BackupDocument> {
     curriculum: await currentCurriculum(),
     data,
   };
-
-  return {
-    ...payload,
-    checksumSha256: await sha256(JSON.stringify(payload)),
-  };
+  return { ...payload, checksumSha256: await sha256(JSON.stringify(payload)) };
 }
 
 export async function exportBackup(path: string): Promise<BackupDocument> {
@@ -142,15 +120,11 @@ export async function exportBackup(path: string): Promise<BackupDocument> {
 function validateStructure(document: BackupDocument): void {
   if (
     document.format !== BACKUP_FORMAT
-    || ![LEGACY_BACKUP_VERSION, BACKUP_VERSION].includes(document.version)
-  ) {
-    throw new Error("Unsupported backup format.");
-  }
+    || ![LEGACY_BACKUP_VERSION, WEEK_MASTERY_BACKUP_VERSION, BACKUP_VERSION].includes(document.version)
+  ) throw new Error("Unsupported backup format.");
 
   for (const [table] of specsForVersion(document.version)) {
-    if (!Array.isArray(document.data?.[table])) {
-      throw new Error(`Backup is missing table: ${table}`);
-    }
+    if (!Array.isArray(document.data?.[table])) throw new Error(`Backup is missing table: ${table}`);
   }
 }
 
@@ -158,29 +132,16 @@ export async function inspectBackup(path: string): Promise<BackupPreview> {
   const raw = await readTextFile(path);
   const document = JSON.parse(raw) as BackupDocument;
   validateStructure(document);
-
   const expected = await sha256(JSON.stringify(payloadOf(document)));
   const checksumValid = expected === document.checksumSha256;
-  const rowCount = Object.values(document.data)
-    .reduce((sum, rows) => sum + rows.length, 0);
-
-  return {
-    path,
-    createdAt: document.createdAt,
-    rowCount,
-    sourceSha256: document.curriculum.sourceSha256,
-    checksumValid,
-    document,
-  };
+  const rowCount = Object.values(document.data).reduce((sum, rows) => sum + rows.length, 0);
+  return { path, createdAt: document.createdAt, rowCount, sourceSha256: document.curriculum.sourceSha256, checksumValid, document };
 }
 
 export async function restoreBackup(document: BackupDocument): Promise<void> {
   validateStructure(document);
-
   const expected = await sha256(JSON.stringify(payloadOf(document)));
-  if (expected !== document.checksumSha256) {
-    throw new Error("Backup checksum does not match.");
-  }
+  if (expected !== document.checksumSha256) throw new Error("Backup checksum does not match.");
 
   const current = await currentCurriculum();
   if (
@@ -189,41 +150,27 @@ export async function restoreBackup(document: BackupDocument): Promise<void> {
     || document.curriculum.weekCount !== current.weekCount
     || document.curriculum.startDate !== current.startDate
     || document.curriculum.endDate !== current.endDate
-  ) {
-    throw new Error("Backup belongs to a different imported plan.");
-  }
+  ) throw new Error("Backup belongs to a different imported plan.");
 
   const operations: SqlOperation[] = [];
   const deleteOrder = [
     "skill_level_assignment_evidence","assessment_evidence","assessment_errors",
     "repair_tasks","project_milestone_state","skill_level_assignments",
-    "user_week_state","assessments","evidence","practice_logs","activity_history","project_records",
+    "side_path_item_state","user_week_state","assessments","evidence","practice_logs","activity_history","project_records",
     "reading_reports","reading_book_state","practice_lesson_state",
     "practice_preferences","timers","learning_logs","user_dod_state",
     "user_block_state","user_day_state","app_settings",
   ];
-
-  for (const table of deleteOrder) {
-    operations.push({ sql: `DELETE FROM ${table}`, params: [] });
-  }
+  for (const table of deleteOrder) operations.push({ sql: `DELETE FROM ${table}`, params: [] });
 
   for (const [table, columns] of specsForVersion(document.version)) {
     for (const row of document.data[table] ?? []) {
-      const placeholders = columns
-        .map((_, index) => `$${index + 1}`)
-        .join(",");
+      const placeholders = columns.map((_, index) => `$${index + 1}`).join(",");
       operations.push({
         sql: `INSERT INTO ${table} (${columns.join(",")}) VALUES (${placeholders})`,
         params: columns.map((column) => {
           const value = row[column];
-          if (
-            value === null
-            || typeof value === "string"
-            || typeof value === "number"
-            || typeof value === "boolean"
-          ) {
-            return value;
-          }
+          if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") return value;
           return value === undefined ? null : String(value);
         }),
       });
@@ -232,12 +179,9 @@ export async function restoreBackup(document: BackupDocument): Promise<void> {
 
   const restoredAt = new Date().toISOString();
   operations.push({
-    sql: `INSERT INTO app_settings (key,value,updated_at)
-          VALUES ('last_restore_at',$1,$1)
-          ON CONFLICT(key) DO UPDATE
-          SET value=excluded.value,updated_at=excluded.updated_at`,
+    sql: `INSERT INTO app_settings (key,value,updated_at) VALUES ('last_restore_at',$1,$1)
+          ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at`,
     params: [restoredAt],
   });
-
   await invoke("execute_sql_transaction", { operations });
 }
