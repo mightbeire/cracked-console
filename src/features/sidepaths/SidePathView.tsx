@@ -5,6 +5,7 @@ import {
   type SidePathDetail,
   type SidePathItemStatus,
 } from "../../data/sidePathRepository";
+import { openCurriculumUrl } from "../../engine/platform/opener";
 
 type ViewState =
   | { status: "LOADING" }
@@ -25,6 +26,7 @@ export function SidePathView({ pathId }: { pathId: number }) {
   const [state, setState] = useState<ViewState>({ status: "LOADING" });
   const [notes, setNotes] = useState<Record<number, string>>({});
   const [busyItem, setBusyItem] = useState<number | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -42,14 +44,18 @@ export function SidePathView({ pathId }: { pathId: number }) {
 
   useEffect(() => {
     setState({ status: "LOADING" });
+    setActionError(null);
     void load();
   }, [load]);
 
   async function updateItem(itemId: number, status: SidePathItemStatus) {
     setBusyItem(itemId);
+    setActionError(null);
     try {
       await setSidePathItemState(itemId, status, notes[itemId] ?? "");
       await load();
+    } catch (error: unknown) {
+      setActionError(error instanceof Error ? error.message : String(error));
     } finally {
       setBusyItem(null);
     }
@@ -57,11 +63,23 @@ export function SidePathView({ pathId }: { pathId: number }) {
 
   async function saveNote(itemId: number, status: SidePathItemStatus) {
     setBusyItem(itemId);
+    setActionError(null);
     try {
       await setSidePathItemState(itemId, status, notes[itemId] ?? "");
       await load();
+    } catch (error: unknown) {
+      setActionError(error instanceof Error ? error.message : String(error));
     } finally {
       setBusyItem(null);
+    }
+  }
+
+  async function openResource(url: string) {
+    setActionError(null);
+    try {
+      await openCurriculumUrl(url);
+    } catch (error: unknown) {
+      setActionError(error instanceof Error ? error.message : String(error));
     }
   }
 
@@ -92,6 +110,8 @@ export function SidePathView({ pathId }: { pathId: number }) {
         <span>Use this whenever you want. Completion is optional and never affects the 52-week curriculum.</span>
       </div>
 
+      {actionError ? <p role="alert">{actionError}</p> : null}
+
       {path.stages.map((stage) => (
         <section className="settings-section" key={stage.id}>
           <div className="section-heading">
@@ -115,7 +135,11 @@ export function SidePathView({ pathId }: { pathId: number }) {
                 </div>
                 <p>{item.description}</p>
                 {item.resourceUrl ? (
-                  <p><a href={item.resourceUrl} rel="noreferrer" target="_blank">Open resource</a></p>
+                  <div className="block-actions">
+                    <button className="secondary-button" onClick={() => void openResource(item.resourceUrl!)} type="button">
+                      Open resource
+                    </button>
+                  </div>
                 ) : null}
                 <label>
                   <span className="field-label">Optional note</span>
