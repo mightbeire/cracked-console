@@ -16,6 +16,7 @@ import {
   restoreBackup,
   type BackupPreview,
 } from "../../data/backupRepository";
+import { resetImportedPlanForReplacement } from "../../data/planResetRepository";
 import {
   chooseJsonOpenPath,
   chooseJsonSavePath,
@@ -26,6 +27,8 @@ export function SettingsView({ planSummary }: { planSummary: ConfigSummary }) {
   const [health, setHealth] = useState<DataHealth | null>(null);
   const [preview, setPreview] = useState<BackupPreview | null>(null);
   const [confirm, setConfirm] = useState("");
+  const [resetConfirm, setResetConfirm] = useState("");
+  const [resetBusy, setResetBusy] = useState(false);
   const [message, setMessage] = useState("");
 
   async function load() {
@@ -68,12 +71,25 @@ export function SettingsView({ planSummary }: { planSummary: ConfigSummary }) {
     await load();
   }
 
+  async function resetPlan() {
+    if (resetConfirm !== "RESET PLAN") return;
+    setResetBusy(true);
+    setMessage("");
+    try {
+      await resetImportedPlanForReplacement();
+      window.location.reload();
+    } catch (error: unknown) {
+      setMessage(error instanceof Error ? error.message : String(error));
+      setResetBusy(false);
+    }
+  }
+
   return (
     <div className="settings-page">
       <header className="page-header">
         <p className="eyebrow">LOCAL OPERATIONS</p>
         <h1>Settings</h1>
-        <p className="page-summary">Startup, local backups, restore, and data health.</p>
+        <p className="page-summary">Startup, local backups, plan replacement, restore, and data health.</p>
       </header>
 
       <section className="settings-section">
@@ -81,7 +97,7 @@ export function SettingsView({ planSummary }: { planSummary: ConfigSummary }) {
         <label>
           <span className="field-label">Startup screen</span>
           <select className="plain-input" value={settings?.startupSection ?? "today"} onChange={(event) => void changeStartup(event.target.value as AppSection)}>
-            {["today","curriculum","proof","projects","skills","evidence","reading","practice","guide","progress","settings"].map((item) => <option key={item} value={item}>{item[0]!.toUpperCase() + item.slice(1)}</option>)}
+            {["today","curriculum","proof","projects","skills","evidence","reading","practice","guide","progress","settings"].map((item) => <option key={item} value={item}>{item === "today" ? "This Week" : item[0]!.toUpperCase() + item.slice(1)}</option>)}
           </select>
         </label>
 
@@ -121,6 +137,24 @@ export function SettingsView({ planSummary }: { planSummary: ConfigSummary }) {
       </section>
 
       <section className="settings-section">
+        <div className="section-heading"><div><p className="section-kicker">PLAN REPLACEMENT</p><h2>Start a new curriculum safely</h2></div></div>
+        <p className="settings-copy">
+          Export a backup first. Resetting clears the imported plan and plan-owned execution/catalog state so a new plan can be imported. Historical proof and evidence remain local but are detached from old day and week numbers, so they cannot prove the replacement curriculum.
+        </p>
+        <div className="rest-rule">
+          <strong>This is not a database wipe.</strong>
+          <span>App settings, activity history, detached assessments/evidence, and standalone practice logs are retained.</span>
+        </div>
+        <label>
+          <span className="field-label">Type RESET PLAN to continue</span>
+          <input className="plain-input" value={resetConfirm} onChange={(event) => setResetConfirm(event.target.value)} />
+        </label>
+        <button className="primary-button" disabled={resetBusy || resetConfirm !== "RESET PLAN"} onClick={() => void resetPlan()} type="button">
+          {resetBusy ? "Resetting..." : "Reset imported plan"}
+        </button>
+      </section>
+
+      <section className="settings-section">
         <div className="section-heading">
           <div><p className="section-kicker">DATA HEALTH</p><h2>Local database checks</h2></div>
           <button className="secondary-button" onClick={() => void runDataHealthCheck().then(setHealth)} type="button">Run check</button>
@@ -139,7 +173,7 @@ export function SettingsView({ planSummary }: { planSummary: ConfigSummary }) {
       <section className="settings-section">
         <div className="section-heading"><div><p className="section-kicker">ABOUT</p><h2>Cracked Console Community Edition</h2></div></div>
         <p className="settings-copy">
-          Local first. {planSummary.days} configured days. {planSummary.skills} configured skills. {planSummary.projects} configured projects. The user owns the plan and execution records.
+          Local first. {planSummary.weeks} configured weeks. {planSummary.days} calendar execution days. {planSummary.skills} configured skills. {planSummary.projects} configured projects. The user owns the plan and execution records.
         </p>
       </section>
 
