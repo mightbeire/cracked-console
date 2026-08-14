@@ -142,8 +142,8 @@ export function SettingsView({ planSummary }: { planSummary: ConfigSummary }) {
           Export a backup first. Resetting clears the imported main curriculum, its execution state, its skills catalog, and its project catalog so a replacement plan can be imported. Historical assessments and evidence stay local but are detached from old day and week numbers, so they cannot prove the replacement curriculum.
         </p>
         <div className="rest-rule">
-          <strong>Reading and Practice/Photography are preserved.</strong>
-          <span>The reset does not clear their curriculum, progress, reports, lessons, preferences, or logs. App settings and activity history also remain.</span>
+          <strong>Reading, Practice/Photography, and self-paced side paths are preserved.</strong>
+          <span>The reset does not clear their catalogs, progress, notes, reports, lessons, preferences, or logs. App settings and activity history also remain.</span>
         </div>
         <label>
           <span className="field-label">Type RESET PLAN to continue</span>
@@ -173,7 +173,7 @@ export function SettingsView({ planSummary }: { planSummary: ConfigSummary }) {
       <section className="settings-section">
         <div className="section-heading"><div><p className="section-kicker">ABOUT</p><h2>Cracked Console Community Edition</h2></div></div>
         <p className="settings-copy">
-          Local first. {planSummary.weeks} configured weeks. {planSummary.days} calendar execution days. {planSummary.skills} configured skills. {planSummary.projects} configured projects. The user owns the plan and execution records.
+          Local first. {planSummary.weeks} configured weeks. {planSummary.days} calendar execution days. {planSummary.skills} configured skills. {planSummary.projects} configured projects. {planSummary.sidePaths ?? 0} self-paced side paths. The user owns the plan and execution records.
         </p>
       </section>
 
