@@ -14,7 +14,8 @@
     "visual:guard": "node scripts/visual-guard.mjs",
     "config:validate": "node scripts/validate-community-config.mjs",
     "config:validate:example": "node scripts/validate-community-config.mjs examples/starter-plan.example.json",
-    "verify": "npm run typecheck && npm run lint && npm run test:run && npm run config:validate:example && npm run build && npm run visual:guard",
+    "config:validate:weekly-example": "node scripts/validate-community-config.mjs examples/weekly-driver.example.json",
+    "verify": "npm run typecheck && npm run lint && npm run test:run && npm run config:validate:example && npm run config:validate:weekly-example && npm run build && npm run visual:guard",
     "public:audit": "node scripts/public-release-audit.mjs",
     "release:check": "npm run public:audit && npm run verify"
   },
