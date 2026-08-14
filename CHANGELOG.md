@@ -11,13 +11,15 @@
 - `WEEKS PROVEN` as the primary curriculum progress metric for weekly-driver plans;
 - explicit, confirmation-gated main-plan replacement in Settings;
 - migration 7 for local week mastery state;
-- assessment-heading regression coverage.
+- assessment-heading regression coverage;
+- GitHub Actions release checks for typecheck, lint, tests, configuration validation, build, visual guard, and public-release audit.
 
 ### Changed
 
 - user-facing `Today` navigation is now `This Week`; the internal `today` section identifier remains unchanged for settings and backup compatibility;
 - assessment discovery now requires whole words such as `PROOF`, `EXAM`, `DEFENCE`, or `CHECK` instead of unsafe substring matches;
-- daily completion is treated as execution telemetry rather than automatic mastery.
+- daily completion is treated as execution telemetry rather than automatic mastery;
+- backup format v2 includes week mastery while retaining restore support for format-v1 backups.
 
 ### Preserved
 
