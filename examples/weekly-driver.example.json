@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "plan": {
-    "version": "weekly-driver-example-1.0",
+    "version": "weekly-driver-example-1.1",
     "title": "Weekly Driver Example",
     "startDate": "2030-01-07",
     "weeks": [
@@ -72,6 +72,13 @@
                 "label": "Evidence requirement",
                 "plannedMinutes": 1,
                 "instructions": "Save and verify at least one representative evidence item linked to this week.",
+                "required": false
+              },
+              {
+                "type": "WEEK_RESOURCE_PRIMARY",
+                "label": "Example human teacher — exact lesson",
+                "plannedMinutes": 1,
+                "instructions": "{\"url\":\"https://example.com/lesson\",\"modality\":\"VIDEO\",\"verified\":true,\"provider\":\"Example Teacher\",\"segment\":\"04:00–12:00\",\"use\":\"Watch once. Close the example and reproduce the idea before opening anything else.\",\"notice\":\"Notice what changes and what stays invariant.\",\"why\":\"Use this as the human entrance to the week's concept.\"}",
                 "required": false
               }
             ],

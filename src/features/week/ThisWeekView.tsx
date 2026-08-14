@@ -12,7 +12,12 @@ import {
   getWeekContractSections,
   type WeekContractSection,
 } from "../../data/weekContractRepository";
+import {
+  getWeekTeacherShelf,
+  type WeekTeacherResource,
+} from "../../data/weekTeacherShelfRepository";
 import { TodayView } from "../today/TodayView";
+import { TeacherShelf } from "./TeacherShelf";
 
 type ViewState =
   | { status: "LOADING" }
@@ -23,6 +28,7 @@ type ViewState =
       dayNumber: number;
       week: WeekMasterySnapshot;
       contractSections: WeekContractSection[];
+      teacherResources: WeekTeacherResource[];
       developmentOverride: boolean;
     }
   | { status: "ERROR"; message: string };
@@ -70,12 +76,16 @@ export function ThisWeekView({ planSummary }: { planSummary: ConfigSummary }) {
       }
 
       const week = await getWeekMasteryByDay(position.dayNumber);
-      const contractSections = await getWeekContractSections(week.weekId);
+      const [contractSections, teacherResources] = await Promise.all([
+        getWeekContractSections(week.weekId),
+        getWeekTeacherShelf(week.weekId),
+      ]);
       setState({
         status: "READY",
         dayNumber: position.dayNumber,
         week,
         contractSections,
+        teacherResources,
         developmentOverride,
       });
     } catch (error: unknown) {
@@ -160,6 +170,8 @@ export function ThisWeekView({ planSummary }: { planSummary: ConfigSummary }) {
           <p>This imported plan has no WEEK_* contract blocks. Daily execution still works, but V3 plans should define the weekly outcome, prerequisite, learning, lab, retrieval, and mastery contract with reserved WEEK_* blocks.</p>
         </section>
       )}
+
+      <TeacherShelf resources={state.teacherResources} />
 
       <section className="mission-block" aria-labelledby="weekly-mastery-title">
         <div className="mission-heading-row">

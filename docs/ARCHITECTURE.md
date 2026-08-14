@@ -10,9 +10,11 @@ The internal section identifier for `This Week` remains `today` so existing sett
 
 Self-paced path navigation is dynamic. The public engine does not hardcode personal path names or content.
 
+`This Week` can also render a plan-owned Teacher Shelf. The public engine owns only the generic card renderer; personal teachers, URLs, segments, notices, and assignments remain inside user-owned configuration.
+
 ## Domain
 
-Domain modules contain rules for execution, week mastery, assessments, repair work, evidence, projects, skills, reading, practice, self-paced paths, and progress.
+Domain modules contain rules for execution, week mastery, assessments, repair work, evidence, projects, skills, reading, practice, self-paced paths, weekly teaching resources, and progress.
 
 Keep domain rules separate from presentation code when practical.
 
@@ -23,6 +25,10 @@ A user-owned JSON file defines the plan.
 The configuration can define weeks, days, rest days, work blocks, resources, skills, projects, reading, practice, and optional self-paced side paths.
 
 Schema v1 supports an optional weekly-driver convention through reserved non-required `WEEK_` block types. The weekly view reads those contract blocks across the configured week without requiring a second personal-plan format.
+
+Teacher Shelf entries use a narrower reserved convention: `WEEK_RESOURCE_*`. They remain ordinary immutable `curriculum_blocks` in SQLite, but the weekly view excludes them from contract prose and parses their JSON metadata into resource cards. This avoids a parallel resource database while preserving plan-level ownership of exact teaching assignments.
+
+Teacher Shelf blocks are non-required metadata and do not participate in day completion, week proof, timers, or Learning Debt.
 
 `sidePaths` uses a separate non-calendar hierarchy: path → stage → item. It is validated before import and stored independently from curriculum weeks and days.
 
@@ -40,7 +46,7 @@ PROVEN
 
 `PROVEN` requires a passing independent assessment linked to the week, at least one verified week-linked evidence item, and no open repair work linked to the week.
 
-Completed days and blocks do not automatically prove a week.
+Completed days, blocks, or teaching resources do not automatically prove a week.
 
 The existing Proof system remains the assessment authority. A V3-style plan uses one active `WEEK_MASTERY_PROOF` block per week; assessment records already carry the source week number.
 
@@ -69,6 +75,8 @@ Plan data describes what the user intends to do. Mutable records describe what t
 
 Week mastery, daily execution, assessments, evidence, repairs, reading/practice progress, and self-paced path state remain separate facts so one cannot silently substitute for another.
 
+Teacher Shelf metadata is immutable curriculum data. Opening a resource produces no automatic progress record.
+
 ## Plan Replacement Boundary
 
 Normal import still refuses to overwrite an active main plan.
@@ -81,6 +89,8 @@ Settings provides an explicit main-plan replacement operation. That operation:
 4. preserves Reading, Practice/Photography, and self-paced path catalogs/state;
 5. preserves settings, activity history, and detached historical proof/evidence.
 
+Because Teacher Shelf entries belong to the main curriculum, replacing a main plan replaces its weekly teaching-resource metadata with the new plan's shelf.
+
 This is intentionally not a database wipe.
 
 ## Native Desktop Boundary
@@ -88,6 +98,8 @@ This is intentionally not a database wipe.
 Tauri provides the Windows desktop shell.
 
 Rust provides native functions that need one stable operating-system or database boundary, including local file reads/writes and transaction-safe database operations.
+
+External Teacher Shelf and side-path URLs open through the existing Tauri opener boundary rather than navigating the application WebView away from Cracked Console.
 
 ## Local-First Rule
 
@@ -100,6 +112,8 @@ Configuration import, plan replacement, and backup restore can change many relat
 ## Evidence Rule
 
 Completion and mastery are different concepts. A completed task can support a skill claim; it does not automatically prove a skill level or a week.
+
+Opening, watching, or reading a Teacher Shelf resource is not evidence by itself.
 
 Self-paced path completion is curiosity-tracking only and is not mastery evidence for the main curriculum.
 

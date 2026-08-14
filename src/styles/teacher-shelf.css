@@ -1,0 +1,117 @@
+.teacher-shelf {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.teacher-shelf-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.teacher-shelf-heading h2,
+.teacher-resource-card h3 {
+  margin: 0;
+}
+
+.teacher-shelf-heading p:not(.section-kicker) {
+  margin: var(--space-2) 0 0;
+  color: var(--text-secondary);
+  max-width: 680px;
+}
+
+.teacher-shelf-heading > span {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.teacher-shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.teacher-resource-card {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-app);
+}
+
+.teacher-resource-card > p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.teacher-resource-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+.teacher-provider {
+  font-size: 12px;
+}
+
+.teacher-resource-notes {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.teacher-resource-notes dt {
+  color: var(--text-primary);
+  font-weight: 650;
+}
+
+.teacher-resource-notes dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.teacher-open-button {
+  width: 100%;
+  margin-top: auto;
+}
+
+@media (max-width: 900px) {
+  .teacher-shelf-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-shelf-heading {
+    display: grid;
+  }
+}
+
+@media (max-width: 560px) {
+  .teacher-shelf {
+    padding: var(--space-4);
+  }
+
+  .teacher-resource-notes {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-resource-notes dd {
+    margin-bottom: var(--space-2);
+  }
+}

@@ -2,13 +2,14 @@
 
 Cracked Console is a local-first desktop application for structured, self-directed learning.
 
-You define the learning plan. Cracked Console provides execution, proof, evidence, review, and optional self-paced exploration systems.
+You define the learning plan. Cracked Console provides execution, proof, evidence, review, precise weekly teaching resources, and optional self-paced exploration systems.
 
 The Community Edition does not include a prescribed curriculum. Core use does not require an account, hosted database, API key, or mandatory AI service. Your plan and execution records stay on your computer.
 
 ## What It Does
 
-- **This Week:** See the current weekly driver, mastery state, and today's execution work.
+- **This Week:** See the current weekly driver, Teacher Shelf, mastery state, and today's execution work.
+- **Teacher Shelf:** Show exact plan-owned teaching, visual, practice, rescue, lab, and reference resources for the current week without treating resource consumption as mastery.
 - **Curriculum:** Browse and search the imported main plan.
 - **Proof:** Record assessment attempts and repair work.
 - **Projects:** Complete project milestones with evidence.
@@ -37,6 +38,22 @@ A V3-style week is `NOT_STARTED`, `IN_PROGRESS`, or `PROVEN`.
 
 Completing days or consuming resources does not automatically prove mastery.
 
+## Teacher Shelf
+
+Weekly-driver plans can optionally define `WEEK_RESOURCE_*` metadata blocks. Cracked Console renders them as a compact Teacher Shelf in **This Week**.
+
+A resource card can identify:
+
+- its role: primary teacher, visual, interactive practice, lab, rescue, or reference;
+- modality and provider;
+- whether the plan author verified the assignment;
+- the exact assigned page, module, episode, or segment;
+- what to do with the resource;
+- what to notice;
+- why the resource was selected.
+
+Teacher Shelf blocks are non-required metadata. Opening a video, page, or course never proves a week. The intended sequence remains teach briefly, attempt independently, rescue only the identified gap, then prove with evidence.
+
 ## Self-Paced Side Paths
 
 A plan can optionally define `sidePaths` for subjects that deserve their own section but should not become scheduled curriculum work.
@@ -45,7 +62,7 @@ Each configured path appears in navigation and can contain ordered stages and it
 
 Side paths never create Learning Debt, streak pressure, required weekly proof, or calendar deadlines. Main-plan replacement preserves their catalog and local state.
 
-See [Configuration](docs/CONFIGURATION.md) for both weekly-driver and side-path formats.
+See [Configuration](docs/CONFIGURATION.md) for weekly-driver, Teacher Shelf, and side-path formats.
 
 ## Local-First Design
 

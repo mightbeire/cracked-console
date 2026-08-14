@@ -115,6 +115,46 @@ A week is not proven merely because its days or resources are complete. The week
 
 Daily completion remains useful execution telemetry. It is not a substitute for week-level proof.
 
+### Optional Weekly Teacher Shelf
+
+A weekly-driver plan can add precise resource cards without adding another schema or database table. Use non-required block types beginning with:
+
+```text
+WEEK_RESOURCE_
+```
+
+Supported role suffixes are:
+
+```text
+WEEK_RESOURCE_PRIMARY
+WEEK_RESOURCE_VISUAL
+WEEK_RESOURCE_INTERACTIVE
+WEEK_RESOURCE_REFERENCE
+WEEK_RESOURCE_RESCUE
+WEEK_RESOURCE_LAB
+```
+
+Teacher Shelf blocks are read by `This Week` and excluded from the ordinary weekly-contract prose. They should normally live on a rest/metadata day with `required: false` and `plannedMinutes: 1`, so resource metadata never becomes attendance work.
+
+The block `label` is the resource title. The `instructions` string contains one JSON object with these fields:
+
+```json
+{
+  "url": "https://example.com/lesson",
+  "modality": "VIDEO",
+  "verified": true,
+  "provider": "Example Teacher",
+  "segment": "04:00–12:00",
+  "use": "Watch once, close it, then reproduce the idea.",
+  "notice": "Notice what changes and what stays invariant.",
+  "why": "Use this as the human entrance to the concept."
+}
+```
+
+`url` must use HTTP or HTTPS. `modality`, `provider`, `segment`, `use`, `notice`, and `why` are display metadata. `verified` indicates that the plan author has checked the assignment; Cracked Console does not independently certify an external source.
+
+The Teacher Shelf follows the pedagogy rule: open only what the current task names. A resource can teach, visualize, provide practice, rescue a specific gap, or serve as an authoritative reference. Opening or watching a resource never proves the week.
+
 ## Days and Blocks
 
 Each day needs:
@@ -136,7 +176,7 @@ A block needs:
 
 Use an uppercase identifier for `type`.
 
-Non-required `WEEK_` contract blocks can live on a protected rest day because the weekly view reads the entire configured week. Required work must not be placed on a protected rest day.
+Non-required `WEEK_` contract and Teacher Shelf blocks can live on a protected rest day because the weekly view reads the entire configured week. Required work must not be placed on a protected rest day.
 
 ## Skills and Projects
 

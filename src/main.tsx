@@ -16,6 +16,7 @@ import "./styles/package7.css";
 import "./styles/community-stage2.css";
 import "./styles/community-stage3.css";
 import "./styles/community-stage4.css";
+import "./styles/teacher-shelf.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
