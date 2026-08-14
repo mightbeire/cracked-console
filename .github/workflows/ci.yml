@@ -45,4 +45,4 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Check Tauri backend
-        run: cargo check --manifest-path src-tauri/Cargo.toml --locked
+        run: cargo check --manifest-path src-tauri/Cargo.toml
