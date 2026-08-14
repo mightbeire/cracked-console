@@ -38,6 +38,16 @@ function sectionKicker(type: string): string {
   return type.replace(/^WEEK_/, "").replaceAll("_", " ");
 }
 
+function proofGateMessage(week: WeekMasterySnapshot): string {
+  const requirements: string[] = [];
+  if (!week.passingAssessmentId) requirements.push("Record a passing independent assessment in Proof.");
+  if (week.verifiedEvidenceCount < 1) requirements.push("Add and verify at least one evidence item linked to this week.");
+  if (week.openRepairCount > 0) requirements.push(`Resolve ${week.openRepairCount} open repair item(s).`);
+  return requirements.length > 0
+    ? requirements.join(" ")
+    : "Independent proof, verified evidence, and repair state all satisfy the gate.";
+}
+
 export function ThisWeekView({ planSummary }: { planSummary: ConfigSummary }) {
   const [state, setState] = useState<ViewState>({ status: "LOADING" });
   const [busy, setBusy] = useState(false);
@@ -164,17 +174,12 @@ export function ThisWeekView({ planSummary }: { planSummary: ConfigSummary }) {
         </div>
 
         <p>
-          Daily work is execution context. It does not prove mastery. This week becomes PROVEN only after a passing independent assessment and resolution of repair work linked to the week.
+          Daily work is execution context. It does not prove mastery. A week becomes PROVEN only after a passing independent assessment, at least one verified week-linked evidence item, and resolution of all repair work linked to the week.
         </p>
 
         <div className="rest-rule">
           <strong>{week.canProve ? "Proof gate is clear." : "Proof gate is not clear yet."}</strong>
-          <span>
-            {week.passingAssessmentId
-              ? "A passing independent assessment exists."
-              : "Record a passing independent assessment in Proof."}
-            {week.openRepairCount > 0 ? ` Resolve ${week.openRepairCount} open repair item(s) first.` : ""}
-          </span>
+          <span>{proofGateMessage(week)}</span>
         </div>
 
         {actionError ? <p role="alert">{actionError}</p> : null}
