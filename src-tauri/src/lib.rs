@@ -171,6 +171,12 @@ pub fn run() {
             sql: include_str!("../migrations/0007_week_mastery.sql"),
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 8,
+            description: "create_side_paths_schema",
+            sql: include_str!("../migrations/0008_side_paths.sql"),
+            kind: MigrationKind::Up,
+        },
     ];
 
     tauri::Builder::default()
