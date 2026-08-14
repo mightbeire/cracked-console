@@ -1,4 +1,4 @@
-export type AppSection =
+export type StaticAppSection =
   | "today"
   | "curriculum"
   | "proof"
@@ -10,6 +10,9 @@ export type AppSection =
   | "guide"
   | "progress"
   | "settings";
+
+export type SidePathSection = `sidepath:${number}`;
+export type AppSection = StaticAppSection | SidePathSection;
 
 export interface NavigationItem {
   id: AppSection;
@@ -29,3 +32,13 @@ export const navigationItems: readonly NavigationItem[] = [
   { id: "progress", label: "Progress" },
   { id: "settings", label: "Settings" },
 ];
+
+export function sidePathSection(pathId: number): SidePathSection {
+  return `sidepath:${pathId}`;
+}
+
+export function sidePathId(section: AppSection): number | null {
+  if (!section.startsWith("sidepath:")) return null;
+  const id = Number(section.slice("sidepath:".length));
+  return Number.isInteger(id) && id > 0 ? id : null;
+}
