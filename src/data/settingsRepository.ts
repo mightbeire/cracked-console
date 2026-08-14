@@ -76,7 +76,8 @@ export async function runDataHealthCheck(): Promise<DataHealth> {
     "assessments","assessment_errors","evidence","assessment_evidence","repair_tasks",
     "activity_history","skill_level_assignments","skill_level_assignment_evidence",
     "project_records","project_milestone_state","reading_book_state","reading_reports",
-    "practice_lesson_state","practice_logs","practice_preferences","app_settings",
+    "practice_lesson_state","practice_logs","practice_preferences","side_path_item_state",
+    "user_week_state","app_settings",
   ];
 
   let mutableRowCount = 0;
