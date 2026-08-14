@@ -159,6 +159,6 @@ export interface ConfigSummary {
   readingBooks: number;
   practiceStages: number;
   practiceLessons: number;
-  sidePaths: number;
-  sidePathItems: number;
+  sidePaths?: number;
+  sidePathItems?: number;
 }
